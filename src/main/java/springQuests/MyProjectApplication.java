@@ -21,7 +21,7 @@ public class MyProjectApplication {
 
     @RequestMapping("/doctor/{incarnation}")
     @ResponseBody
-    public String doctorWho (@PathVariable("incarnation") int i) {
+    public Doctor doctorWho (@PathVariable("incarnation") int i) {
         if (i >= 0 && i <= 8) {
             throw new ResponseStatusException(HttpStatus.SEE_OTHER, "See Other");
         }
@@ -45,6 +45,6 @@ public class MyProjectApplication {
                 name = "Jodie Whittaker";
                 break;
         }
-        return "{\"number\": " + i + ", \"name\": \"" + name + "\"}";
+        return new Doctor(i, name);
     }
 }
