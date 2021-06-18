@@ -2,59 +2,49 @@ package springQuests;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-// Systematically created in a new Spring Boot project.
-// It is the entry point through which the program will start when it is launched
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.server.ResponseStatusException;
 
-@Controller //For mapping to be taken into account
+@Controller
 @SpringBootApplication
-// this annotation allows Spring to automatically configure itself according to
-// the project dependencies described in the pom.xml
-//@Configuration + @ComponentScan + @EnableAutoConfiguration
 public class MyProjectApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(MyProjectApplication.class, args);
     }
 
-    @RequestMapping("/")
+    @RequestMapping("/doctor/{incarnation}")
     @ResponseBody
-    public String index() {
-        {
-            return "  <ul>\n" +
-                    "    <li><a href='http://localhost:8080/doctor/1'>First Doctor</a></li>\n" +
-                    "    <li><a href='http://localhost:8080/doctor/2'>Second Doctor</a></li>\n" +
-                    "    <li><a href='http://localhost:8080/doctor/3'>Third Doctor</a></li>\n" +
-                    "    <li><a href='http://localhost:8080/doctor/4'>Fourth Doctor</a></li>\n" +
-                    "  </ul>";
+    public String doctorWho (@PathVariable("incarnation") int i) {
+        if (i >= 0 && i <= 8) {
+            throw new ResponseStatusException(HttpStatus.SEE_OTHER, "See Other");
         }
-    }
+        else if (i >= 9 && i <= 13) {
 
-    @RequestMapping("/doctor/1")
-    @ResponseBody
-    public String firstDoctor () {
-                return "William Hartnell";
+        }
+        else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Question Not Found");
+        }
+        String name = "";
+        switch (i) {
+            case 9:
+                name = "Christopher Eccleston";
+            case 10:
+                name = "David Tennant";
+            case 11:
+                name = "Matt Smith";
+            case 12:
+                name = "Peter Capaldi";
+            case 13:
+                name = "Jodie Whittaker";
+                break;
+        }
+        return "{\"number\": " + i + ", \"name\": \"" + name + "\"}";
     }
-
-    @RequestMapping("/doctor/2")
-    @ResponseBody
-    public String secondDoctor () {
-                return "Patrick Troughton";
-    }
-
-    @RequestMapping("/doctor/3")
-    @ResponseBody
-    public String thirdDoctor () {
-                return "Jon Pertwee";
-    }
-
-    @RequestMapping("/doctor/4")
-    @ResponseBody
-    public String fourthDoctor () {
-                return "Tom Baker";
-    }
-
 }
